@@ -14,13 +14,13 @@ BAM_FILENAMES = {
 }
 
 
-REF_GENOME = "path/to/Homo_sapiens_assembly38.fasta"
+REF_GENOME = "data/Homo_sapiens_assembly38.fasta"
 KNOWN_SITES = [
-    "path/to/1000G_phase1.snps.high_confidence.hg38.vcf.gz",
-    "path/to/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz",
+    "data/1000G_phase1.snps.high_confidence.hg38.vcf.gz",
+    "data/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz",
 ]
 
-# Used by "get_bam_reader."
+# Used by "get_bam_reader".
 NORMAL = 0
 TUMOR = 1
 
