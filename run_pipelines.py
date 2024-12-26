@@ -10,6 +10,7 @@ import os, sys
 from datetime import datetime
 import logging
 import subprocess
+import time
 
 TIMESTAMP = datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
 
@@ -123,10 +124,28 @@ def run_all_pipelines():
     total_pipelines = len(mappers) * len(callers) * len(recalibration_options)
     current_pipeline = 0
 
-    for mapper in mappers:
+    FINISHED = {
+        True: {
+            "somaticsniper": {"bwa": True, "bowtie": False},
+            "mutect": {"bwa": False, "bowtie": False},
+            "strelka": {"bwa": False, "bowtie": False},
+        },
+        False: {
+            "somaticsniper": {"bwa": False, "bowtie": False},
+            "mutect": {"bwa": False, "bowtie": False},
+            "strelka": {"bwa": False, "bowtie": False},
+        },
+    }
+
+    for use_recal in recalibration_options:
         for caller in callers:
-            for use_recal in recalibration_options:
+            for mapper in mappers:
                 current_pipeline += 1
+                if FINISHED[use_recal][caller][mapper]:
+                    logger.info(
+                        f"Already Processed: ({current_pipeline}) mapper={mapper}, caller={caller}, use_recal={use_recal}"
+                    )
+                    continue
                 logger.debug(f"PIPELINE {current_pipeline}/{total_pipelines}")
                 logger.info(
                     f"Configuration: Mapper={mapper}, Caller={caller}, Recalibration={use_recal}"
@@ -136,10 +155,14 @@ def run_all_pipelines():
                     config = pipeline.build()
                     logger.debug("Running pipeline.")
                     pipeline_runner = PipelineRunner()
+                    START_TIME = time.time()
+                    logger.info("Started the clock")
                     pipeline_runner.run_pipeline(config)
+                    END_TIME = time.time()
                     logger.debug(
                         f"Successfully completed pipeline {current_pipeline}/{total_pipelines}"
                     )
+                    logger.debug(f"Time complexity: {END_TIME - START_TIME}")
                 except Exception as e:
                     logger.error(
                         f"Pipeline {current_pipeline}/{total_pipelines} failed: {e}"
@@ -150,4 +173,5 @@ def run_all_pipelines():
 if __name__ == "__main__":
     if "--process-bam" in sys.argv:
         sort_and_index_bam_files()
+    subprocess.run(["snakemake", "--cores", "all", "--latency-wait", "60"])
     run_all_pipelines()
