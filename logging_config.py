@@ -6,7 +6,7 @@ __logger = None
 
 
 def init_log(timestamp):
-    global logger
+    global __logger
     if not os.path.exists("log"):
         os.makedirs("log")
     logging.basicConfig(
@@ -16,7 +16,7 @@ def init_log(timestamp):
         datefmt="%H:%M:%S",
         level=logging.DEBUG,
     )
-    logger = logging.getLogger(__name__)
+    __logger = logging.getLogger(__name__)
 
 
 def get_logger():

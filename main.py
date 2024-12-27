@@ -129,6 +129,7 @@ def run_pipeline(mapper: str, caller: str, use_recal: bool):
         logger.debug(f"Time complexity: {END_TIME - START_TIME}")
     except Exception as e:
         logger.error(f"Execution failed: {e}")
+        raise e
 
 
 if __name__ == "__main__":
@@ -138,12 +139,12 @@ if __name__ == "__main__":
         sort_and_index_bam_files()
     elif "--clearup" in sys.argv:
         clearup(logs="--logs" in sys.argv)
-    elif "--run-pipelines" in sys.argv:
+    elif "--run-pipeline" in sys.argv:
         mappers = ["bwa", "bowtie"]
         callers = ["somaticsniper", "mutect", "strelka"]
         recalibration_options = [True, False]
         subprocess.run(["snakemake", "--cores", "all", "--latency-wait", "60"])
         mapper = input(f"Mapper ({', '.join(mappers)})  ")
         caller = input(f"Caller ({', '.join(callers)})  ")
-        use_recal = input(f"Base recalibration? ({', '.join(mappers)}) ")
+        use_recal = True if input(f"Base recalibration? (Y/N) ") == "Y" else False
         run_pipeline(mapper, caller, use_recal)
