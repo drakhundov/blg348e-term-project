@@ -1,11 +1,16 @@
-from cosap import (
-    MDUP,
-    BamReader,
-    Pipeline,
-    PipelineRunner,
-    Recalibrator,
-    VariantCaller,
-)
+try:
+    from cosap import (
+        MDUP,
+        BamReader,
+        Pipeline,
+        PipelineRunner,
+        Recalibrator,
+        VariantCaller,
+    )
+except Exception as e:
+    # ! Some functionality like clearup
+    # ! Does not require CoSAP.
+    pass
 import os, sys
 from datetime import datetime
 import subprocess
@@ -23,7 +28,7 @@ BAM_FILENAMES = {
     "bowtie": {"tumor": "tumor_bowtie.bam", "germline": "normal_bowtie.bam"},
     "bwa": {"tumor": "tumor_bwa.bam", "germline": "normal_bwa.bam"},
 }
-BED_FILE = "/cosap_data/High-Confidence_Regions_v1.2.bed"
+BED_FILENAME = "/cosap_data/High-Confidence_Regions_v1.2.bed"
 
 # !VCF
 VCF_DIR = "variants"
@@ -61,8 +66,8 @@ def create_pipeline(mapper: str, caller: str, use_recalibration: bool):
     if use_recalibration:
         # Add base recalibration.
         logger.info("Adding base recalibration to pipeline")
-        basecal_normal = Recalibrator(input_step=germline_bam, bed_file=BED_FILE)
-        basecal_tumor = Recalibrator(input_step=tumor_bam, bed_file=BED_FILE)
+        basecal_normal = Recalibrator(input_step=germline_bam)
+        basecal_tumor = Recalibrator(input_step=tumor_bam)
         germline_input = basecal_normal
         tumor_input = basecal_tumor
     else:
@@ -70,24 +75,15 @@ def create_pipeline(mapper: str, caller: str, use_recalibration: bool):
         tumor_input = tumor_bam
     # Add variant caller.
     logger.info("Adding variant caller to pipeline")
-    caller = VariantCaller(
-        library=caller,
-        germline=germline_input,
-        tumor=tumor_input,
-        bed_file=BED_FILE,
-        params={
-            "output_vcf": os.path.join(
-                VCF_DIR, f"{mapper}_{caller}_{'recal' if use_recalibration else ''}.vcf"
-            ),
-            "threads": 1,  # Limit to single thread for stability
-        },
-    )
+    caller = VariantCaller(library=caller, germline=germline_input, tumor=tumor_input)
     pipeline = (
         Pipeline()
+        .add(germline_bam)
+        .add(tumor_bam)
         .add(mdup_normal)
         .add(mdup_tumor)
-        .add(basecal_normal)
-        .add(basecal_tumor)
+        .add(germline_input)
+        .add(tumor_input)
         .add(caller)
     )
     return pipeline
@@ -133,7 +129,7 @@ def run_pipeline(mapper: str, caller: str, use_recal: bool):
 
 
 if __name__ == "__main__":
-    init_log(TIMESTAMP)
+    init_log(logfile=TIMESTAMP)
     logger = get_logger()
     if "--process-bam" in sys.argv:
         sort_and_index_bam_files()
@@ -144,7 +140,9 @@ if __name__ == "__main__":
         callers = ["somaticsniper", "mutect", "strelka"]
         recalibration_options = [True, False]
         subprocess.run(["snakemake", "--cores", "all", "--latency-wait", "60"])
-        mapper = input(f"Mapper ({', '.join(mappers)})  ")
-        caller = input(f"Caller ({', '.join(callers)})  ")
-        use_recal = True if input(f"Base recalibration? (Y/N) ") == "Y" else False
+        mapper = "bwa"  # input(f"Mapper ({', '.join(mappers)})  ")
+        caller = "somaticsniper"  # input(f"Caller ({', '.join(callers)})  ")
+        use_recal = (
+            False  # True if input(f"Base recalibration? (Y/N) ") == "Y" else False
+        )
         run_pipeline(mapper, caller, use_recal)

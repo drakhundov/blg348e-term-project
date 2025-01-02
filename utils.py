@@ -20,13 +20,7 @@ CLEARUP_LST = [
 
 def clearup(logs: bool):
     if logs:
-        CLEARUP_LST.extend(
-            [
-                os.path.join("log", path)
-                for path in os.listdir("log")
-                if path != f"{TIMESTAMP}.log"
-            ]
-        )
+        CLEARUP_LST.append("log/*")
     for path in CLEARUP_LST:
         subprocess.run(
             f"rm -rf {path}",
