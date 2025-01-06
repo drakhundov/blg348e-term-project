@@ -28,7 +28,7 @@ class Logger:
             raise Exception("Logger hasn't been initialized.")
 
     def info(self, msg: str):
-        self.__logger.info(str)
+        self.__logger.info(msg)
 
     def debug(self, msg: str):
         self.__logger.debug(msg)
