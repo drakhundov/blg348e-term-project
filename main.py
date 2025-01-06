@@ -117,7 +117,7 @@ def start_pipeline_subprocess(mapper: str, caller: str, use_recal: bool):
         f"--caller={caller}",
         f"--use-recal={1 if use_recal else 0}",
     ]
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, stdout = sys.stdout, stderr = sys.stderr, text=True, check=True)
     if result.returncode != 0:
         logger.error(f"Pipeline failed: {result.stderr}")
     else:
