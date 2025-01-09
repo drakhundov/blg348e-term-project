@@ -1,9 +1,9 @@
 # This file was produced by bcftools stats (1.16+htslib-1.20) and can be plotted using plot-vcfstats.
-# The command line was:	bcftools stats  variants/bwa_somaticsniper_recal.vcf
+# The command line was:	bcftools stats  variants/bwa_mutect_recal/all_unfiltered_tmpUjKLKASHsejppyADWroeWQ.vcf
 #
 # Definition of sets:
 # ID	[2]id	[3]tab-separated file names
-ID	0	variants/bwa_somaticsniper_recal.vcf
+ID	0	variants/bwa_mutect_recal/all_unfiltered_tmpUjKLKASHsejppyADWroeWQ.vcf
 # SN, Summary numbers:
 #   number of records   .. number of data rows in the VCF
 #   number of no-ALTs   .. reference-only sites, ALT is either "." or identical to REF
@@ -21,41 +21,39 @@ ID	0	variants/bwa_somaticsniper_recal.vcf
 # 
 # SN	[2]id	[3]key	[4]value
 SN	0	number of samples:	2
-SN	0	number of records:	36523
+SN	0	number of records:	0
 SN	0	number of no-ALTs:	0
-SN	0	number of SNPs:	36523
+SN	0	number of SNPs:	0
 SN	0	number of MNPs:	0
 SN	0	number of indels:	0
 SN	0	number of others:	0
-SN	0	number of multiallelic sites:	791
-SN	0	number of multiallelic SNP sites:	791
+SN	0	number of multiallelic sites:	0
+SN	0	number of multiallelic SNP sites:	0
 # TSTV, transitions/transversions:
 # TSTV	[2]id	[3]ts	[4]tv	[5]ts/tv	[6]ts (1st ALT)	[7]tv (1st ALT)	[8]ts/tv (1st ALT)
-TSTV	0	21901	15421	1.42	21614	14909	1.45
+TSTV	0	0	0	0.00	0	0	0.00
 # SiS, Singleton stats:
 # SiS	[2]id	[3]allele count	[4]number of SNPs	[5]number of transitions	[6]number of transversions	[7]number of indels	[8]repeat-consistent	[9]repeat-inconsistent	[10]not applicable
-SiS	0	1	37322	21901	15421	0	0	0	0
+SiS	0	1	0	0	0	0	0	0	0
 # AF, Stats by non-reference allele frequency:
 # AF	[2]id	[3]allele frequency	[4]number of SNPs	[5]number of transitions	[6]number of transversions	[7]number of indels	[8]repeat-consistent	[9]repeat-inconsistent	[10]not applicable
-AF	0	0.000000	37322	21901	15421	0	0	0	0
 # QUAL, Stats by quality
 # QUAL	[2]id	[3]Quality	[4]number of SNPs	[5]number of transitions (1st ALT)	[6]number of transversions (1st ALT)	[7]number of indels
-QUAL	0	.	36523	21614	14909	0
 # IDD, InDel distribution:
 # IDD	[2]id	[3]length (deletions negative)	[4]number of sites	[5]number of genotypes	[6]mean VAF
 # ST, Substitution types:
 # ST	[2]id	[3]type	[4]count
-ST	0	A>C	1132
-ST	0	A>G	4640
-ST	0	A>T	1263
-ST	0	C>A	3527
-ST	0	C>G	1928
-ST	0	C>T	6367
-ST	0	G>A	6293
-ST	0	G>C	1835
-ST	0	G>T	3218
-ST	0	T>A	1294
-ST	0	T>C	4601
-ST	0	T>G	1224
+ST	0	A>C	0
+ST	0	A>G	0
+ST	0	A>T	0
+ST	0	C>A	0
+ST	0	C>G	0
+ST	0	C>T	0
+ST	0	G>A	0
+ST	0	G>C	0
+ST	0	G>T	0
+ST	0	T>A	0
+ST	0	T>C	0
+ST	0	T>G	0
 # DP, Depth distribution
 # DP	[2]id	[3]bin	[4]number of genotypes	[5]fraction of genotypes (%)	[6]number of sites	[7]fraction of sites (%)
